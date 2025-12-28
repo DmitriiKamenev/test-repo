@@ -1,11 +1,26 @@
 import asyncio
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # <-- добавили
 from create_bot import bot, dp
 from handlers.start import start_router
 import uvicorn
 
 app = FastAPI()
 dp.include_router(start_router)
+
+# ----------- Настройка CORS -----------
+origins = [
+    "*"  # разрешаем все источники, можно указать конкретные фронтенды
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # разрешаем все методы, включая OPTIONS
+    allow_headers=["*"],
+)
+# --------------------------------------
 
 bot_task: asyncio.Task | None = None
 
@@ -15,9 +30,7 @@ async def health():
 
 @app.post("/shutdown")
 async def shutdown_service():
-    """Останавливаем бота безопасно на Back4App"""
     global bot_task
-
     try:
         if bot_task and not bot_task.done():
             bot_task.cancel()
@@ -26,7 +39,6 @@ async def shutdown_service():
             except asyncio.CancelledError:
                 pass
 
-        # Закрытие storage и сессии бота
         if dp.storage:
             await dp.storage.close()
 
@@ -39,15 +51,12 @@ async def shutdown_service():
         return {"status": "error", "detail": str(e)}
 
 async def start_bot():
-    """Запуск polling бота"""
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 async def main():
     global bot_task
     bot_task = asyncio.create_task(start_bot())
-
-    # Запуск FastAPI через Uvicorn
     config = uvicorn.Config(app, host="0.0.0.0", port=8080, log_level="info")
     server = uvicorn.Server(config)
     await server.serve()
