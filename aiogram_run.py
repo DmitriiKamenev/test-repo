@@ -3,14 +3,11 @@ from fastapi import FastAPI
 from create_bot import bot, dp
 from handlers.start import start_router
 import uvicorn
-import signal
-import sys
 
 app = FastAPI()
 dp.include_router(start_router)
 
-# Глобальная переменная для сервера Uvicorn
-uvicorn_server = None
+bot_task: asyncio.Task | None = None
 
 @app.get("/")
 async def health():
@@ -18,33 +15,43 @@ async def health():
 
 @app.post("/shutdown")
 async def shutdown_service():
-    """Останавливает FastAPI и бота"""
-    # Остановка бота
-    await bot.close()
-    await dp.storage.close()
-    await dp.storage.wait_closed()
+    """Останавливаем бота безопасно на Back4App"""
+    global bot_task
 
-    # Остановка сервера Uvicorn
-    if uvicorn_server:
-        uvicorn_server.should_exit = True
+    try:
+        if bot_task and not bot_task.done():
+            bot_task.cancel()
+            try:
+                await bot_task
+            except asyncio.CancelledError:
+                pass
 
-    return {"status": "shutting down"}
+        # Закрытие storage и сессии бота
+        if dp.storage:
+            await dp.storage.close()
+            await dp.storage.wait_closed()
+
+        if bot.session:
+            await bot.session.close()
+
+        return {"status": "bot stopped"}
+
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
 
 async def start_bot():
-    """Запуск бота в фоне"""
+    """Запуск polling бота"""
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 async def main():
-    global uvicorn_server
-    # Запуск бота в фоне
-    asyncio.create_task(start_bot())
+    global bot_task
+    bot_task = asyncio.create_task(start_bot())
 
-    # Настройка и запуск FastAPI
+    # Запуск FastAPI через Uvicorn
     config = uvicorn.Config(app, host="0.0.0.0", port=8080, log_level="info")
-    uvicorn_server = uvicorn.Server(config)
-    await uvicorn_server.serve()
+    server = uvicorn.Server(config)
+    await server.serve()
 
 if __name__ == "__main__":
-    # Запуск всего через asyncio.run
     asyncio.run(main())
