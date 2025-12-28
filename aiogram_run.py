@@ -10,15 +10,14 @@ app = FastAPI()
 async def health():
     return {"status": "ok"}
 
-async def start_bot_task():
+async def main():
     dp.include_router(start_router)
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    # Запускаем бота в фоне
+    asyncio.create_task(dp.start_polling(bot))
+    # Запускаем FastAPI
+    config = uvicorn.Config(app, host="0.0.0.0", port=8080, log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
 
 if __name__ == "__main__":
-    dp.include_router(start_router)
-    loop = asyncio.get_event_loop()
-    # Запускаем бота в фоне
-    loop.create_task(start_bot_task())
-    # Запускаем FastAPI в основном процессе
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    asyncio.run(main())
