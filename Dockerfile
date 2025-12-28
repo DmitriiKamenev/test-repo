@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем весь код
 COPY . .
 
+EXPOSE 8080
+
 # Указываем команду для запуска приложения
 # Замените 'app.py' на ваш основной файл
 CMD ["python", "aiogram_run.py"]
