@@ -16,9 +16,20 @@ async def start_bot():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
+def main():
+    # uvicorn.run сам блокирует поток, но мы можем использовать on_startup
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=8080,
+        log_level="info",
+        loop="asyncio",
+        reload=False,
+        factory=False,
+        access_log=False,
+        lifespan="on",
+        on_startup=[start_bot]  # запускаем бота после старта сервера
+    )
+
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    # Создаем задачу для бота
-    loop.create_task(start_bot())
-    # Запускаем FastAPI через uvicorn (не в отдельном потоке)
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    main()
