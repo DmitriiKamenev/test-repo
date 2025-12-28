@@ -28,27 +28,6 @@ bot_task: asyncio.Task | None = None
 async def health():
     return {"status": "ok"}
 
-@app.post("/shutdown")
-async def shutdown_service():
-    global bot_task
-    try:
-        if bot_task and not bot_task.done():
-            bot_task.cancel()
-            try:
-                await bot_task
-            except asyncio.CancelledError:
-                pass
-
-        if dp.storage:
-            await dp.storage.close()
-
-        if bot.session:
-            await bot.session.close()
-
-        return {"status": "bot stopped"}
-
-    except Exception as e:
-        return {"status": "error", "detail": str(e)}
 
 async def start_bot():
     await bot.delete_webhook(drop_pending_updates=True)
