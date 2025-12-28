@@ -29,7 +29,6 @@ async def shutdown_service():
         # Закрытие storage и сессии бота
         if dp.storage:
             await dp.storage.close()
-            await dp.storage.wait_closed()
 
         if bot.session:
             await bot.session.close()
