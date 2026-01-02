@@ -1,0 +1,22 @@
+[
+  {
+    "id": "case_budget_mini",
+    "type": "case",
+    "name": "Budget Mini Tower",
+    "form_factor": ["mATX","Mini-ITX"],
+    "max_gpu_length": 260,
+    "usb_ports": 2,
+    "price": 3500,
+    "fact": "Компактный корпус для бюджетной сборки"
+  },
+  {
+    "id": "case_mid_tower",
+    "type": "case",
+    "name": "Mid Tower Airflow",
+    "form_factor": ["ATX","mATX","Mini-ITX"],
+    "max_gpu_length": 330,
+    "usb_ports": 4,
+    "price": 5500,
+    "fact": "Оптимальный корпус с хорошей вентиляцией"
+  }
+]

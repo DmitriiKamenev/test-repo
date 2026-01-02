@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cooler_box",
+    "type": "cooler",
+    "name": "BOX Cooler",
+    "tdp_max": 65,
+    "price": 0,
+    "fact": "Стоковое охлаждение, подходит для невысокого TDP"
+  },
+  {
+    "id": "cooler_air_120",
+    "type": "cooler",
+    "name": "120mm Tower Cooler",
+    "tdp_max": 150,
+    "price": 2500,
+    "fact": "Подходит для процессоров среднего TDP"
+  },
+  {
+    "id": "cooler_air_140",
+    "type": "cooler",
+    "name": "140mm Tower Cooler",
+    "tdp_max": 200,
+    "price": 4000,
+    "fact": "Для разгона и высоких нагрузок"
+  }
+]
