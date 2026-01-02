@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
+import os
 
 from fsm.states import BuildState
 from services.json_loader import load_components, get_by_id
@@ -89,7 +90,7 @@ async def card_back(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "card:checkout")
 async def card_checkout(call: CallbackQuery, state: FSMContext):
-    """Создать PDF и отправить пользователю"""
+    """Создать PDF, отправить пользователю и удалить файл"""
     build = (await state.get_data()).get("build", {})
     if not build:
         await call.message.edit_text("❌ Сборка пуста")
@@ -98,9 +99,14 @@ async def card_checkout(call: CallbackQuery, state: FSMContext):
     # Генерация PDF
     pdf_path = generate_build_pdf(build, filename="pc_build.pdf")
 
-    # Отправка PDF
-    file = FSInputFile(path=pdf_path, filename="pc_build.pdf")
-    await call.message.answer_document(file)
+    try:
+        # Отправка PDF
+        file = FSInputFile(path=pdf_path, filename="pc_build.pdf")
+        await call.message.answer_document(file)
+    finally:
+        # Удаляем файл после отправки
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
 
     # Подтверждение и возврат в меню
     await call.message.edit_text(
