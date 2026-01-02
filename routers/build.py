@@ -9,6 +9,9 @@ from services.pricing import total_price
 from keyboard.inline_keyboard import build_menu_kb, components_kb,card_kb
 from services.configurator import get_available_components
 from services.card import build_card
+from services.pdf_generator import generate_build_pdf
+from aiogram.types import InputFile
+from aiogram.types import FSInputFile
 
 router = Router()
 
@@ -83,13 +86,25 @@ async def card_back(call: CallbackQuery, state: FSMContext):
         reply_markup=build_menu_kb(build)
     )
 
+
 @router.callback_query(F.data == "card:checkout")
 async def card_checkout(call: CallbackQuery, state: FSMContext):
-    """Дальнейшее оформление"""
+    """Создать PDF и отправить пользователю"""
     build = (await state.get_data()).get("build", {})
-    price = total_price(build)
+    if not build:
+        await call.message.edit_text("❌ Сборка пуста")
+        return
+
+    # Генерация PDF
+    pdf_path = generate_build_pdf(build, filename="pc_build.pdf")
+
+    # Отправка PDF
+    file = FSInputFile(path=pdf_path, filename="pc_build.pdf")
+    await call.message.answer_document(file)
+
+    # Подтверждение и возврат в меню
     await call.message.edit_text(
-        f"📝 Оформление сборки\nИтоговая стоимость: {price} ₽\n\n"
-        "📌 На этом шаге можно добавить интеграцию с платёжной системой "
-        "или отправку сборки на email/telegram."
+        "✅ PDF сборки готов! Вы можете сохранить его.\n"
+        "Если хотите изменить сборку, вернитесь назад.",
+        reply_markup=build_menu_kb(build)
     )
