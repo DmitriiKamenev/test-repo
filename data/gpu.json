@@ -1,0 +1,29 @@
+[
+  {
+    "id": "gpu_gtx_1660",
+    "type": "gpu",
+    "name": "NVIDIA GTX 1660 Super",
+    "tdp": 125,
+    "length": 230,
+    "price": 18000,
+    "fact": "Отлично для 1080p игр"
+  },
+  {
+    "id": "gpu_rtx_3060",
+    "type": "gpu",
+    "name": "NVIDIA RTX 3060",
+    "tdp": 170,
+    "length": 242,
+    "price": 30000,
+    "fact": "Лучшая средняя игровая производительность"
+  },
+  {
+    "id": "gpu_rx_6600",
+    "type": "gpu",
+    "name": "AMD RX 6600",
+    "tdp": 132,
+    "length": 240,
+    "price": 22000,
+    "fact": "Бюджетная альтернатива для 1080p"
+  }
+]

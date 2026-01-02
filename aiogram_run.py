@@ -2,10 +2,15 @@ import asyncio
 from fastapi import FastAPI
 from create_bot import bot, dp
 from handlers.start import start_router
+from routers.build import router
+from handlers.callback_handlers import callback_router
 import uvicorn
 
 app = FastAPI()
 dp.include_router(start_router)
+dp.include_router(router)
+dp.include_router(callback_router)
+
 
 bot_task: asyncio.Task | None = None
 

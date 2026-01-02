@@ -1,0 +1,29 @@
+[
+  {
+    "id": "psu_500",
+    "type": "psu",
+    "name": "500W Bronze",
+    "power": 500,
+    "price": 4000,
+    "efficiency": "80+ Bronze",
+    "fact": "Подойдёт для лёгкой сборки"
+  },
+  {
+    "id": "psu_600",
+    "type": "psu",
+    "name": "600W Bronze",
+    "power": 600,
+    "price": 5000,
+    "efficiency": "80+ Bronze",
+    "fact": "Подойдёт для сборки среднего уровня"
+  },
+  {
+    "id": "psu_700",
+    "type": "psu",
+    "name": "700W Bronze",
+    "power": 700,
+    "price": 6000,
+    "efficiency": "80+ Bronze",
+    "fact": "Можно ставить мощные видеокарты"
+  }
+]

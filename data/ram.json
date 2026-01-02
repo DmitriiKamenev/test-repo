@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ram_16_ddr4_3200",
+    "type": "ram",
+    "name": "16GB DDR4 3200MHz",
+    "memory_type": "DDR4",
+    "frequency": 3200,
+    "price": 4500,
+    "fact": "Достаточно для игр и офисных задач"
+  },
+  {
+    "id": "ram_32_ddr4_3200",
+    "type": "ram",
+    "name": "32GB DDR4 3200MHz",
+    "memory_type": "DDR4",
+    "frequency": 3200,
+    "price": 8000,
+    "fact": "Для тяжёлых приложений и стриминга"
+  }
+]

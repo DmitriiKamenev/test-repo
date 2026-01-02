@@ -1,0 +1,24 @@
+[
+  {
+    "id": "mb_b660m",
+    "type": "motherboard",
+    "name": "MSI B660M PRO",
+    "socket": "LGA1700",
+    "memory_type": "DDR4",
+    "memory_freq_max": 3200,
+    "form_factor": ["mATX", "Mini-ITX"],
+    "price": 9000,
+    "fact": "Поддержка M.2, DDR4, mATX форм-фактор"
+  },
+  {
+    "id": "mb_b550m",
+    "type": "motherboard",
+    "name": "ASUS B550M-K",
+    "socket": "AM4",
+    "memory_type": "DDR4",
+    "memory_freq_max": 3200,
+    "form_factor": ["mATX", "Mini-ITX"],
+    "price": 8000,
+    "fact": "Надёжная бюджетная материнка для Ryzen"
+  }
+]
